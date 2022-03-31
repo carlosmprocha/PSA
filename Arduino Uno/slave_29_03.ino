@@ -53,14 +53,9 @@ Wire.onReceive(receiveEvents);
 
 void loop(){
 
-  delay(500);
-  Serial.println(F("---> recieved events"));
-n = Wire.read();
-Serial.print(numBytes);
-Serial.println(F("bytes recieved"));
-Serial.print(F("recieved value : "));
-Serial.println(n);
-if(n==12){
+delay(500);
+command;
+if(command=="forward"){
  
   Serial.println("ANDAR PARA FRENTE - SDSDKVKDVKDMSVMSDMVDPVMPDMVPKSMDVKPMDSKVPDMVPMDPKVMKPVVSBF");
   analogWrite(INB_PIN, 255); // Velocidade do motor
@@ -82,9 +77,8 @@ if(n==12){
   analogWrite(INB_PIN, 0); // Velocidade do motor
   }
 
-  if(n==11){
+else if(command=="reverse"){
    
-    
   Serial.println("ANDAR PARA TRAS");
   analogWrite(INB_PIN, 255); // Velocidade do motor
   analogWrite(INA_PIN, 255); // Velocidade do motor
@@ -106,11 +100,28 @@ if(n==12){
   analogWrite(INA1_PIN, 0); // Velocidade do motor
   analogWrite(INB_PIN, 0); // Velocidade do motor
   }
-  //receiveEvents(1); 
-  //delay(10000);
 }
 
+void command (char order){
 
+Serial.println(F("---> recieved events"));
+n = Wire.read();
+Serial.print(numBytes);
+Serial.println(F("bytes recieved"));
+Serial.print(F("recieved value : "));
+Serial.println(n);
+
+if (n==12){
+  return "forward";
+}
+else if (n==11){
+  return "reverse";
+}
+else{
+  return "wait";
+}
+  
+}
 
 void requestEvents()
 {
