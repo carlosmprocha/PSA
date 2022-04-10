@@ -37,8 +37,9 @@ void setup() {
 Wire.begin(I2C_SLAVE_ADDRESS);
 Serial.begin(9600);
 Serial.println("-------------------------------------I am Slave1");  
-Wire.onRequest(requestEvents);
-Wire.onReceive(receiveEvents);
+
+//Wire.onRequest(requestEvents);
+//Wire.onReceive(receiveEvents);
   
 pinMode(enA, OUTPUT);
 pinMode(enB, OUTPUT);
