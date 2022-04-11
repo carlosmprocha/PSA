@@ -15,15 +15,6 @@ SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
 #define in11 6
 #define in21 4
 
-//BACK LEFT
-#define enB 9
-#define in3 10
-#define in4 8
-
-//BACK RIGHT
-#define enA 11
-#define in1 13
-#define in2 12
 
 int n = 0;
 int a = 0;
@@ -44,12 +35,7 @@ Serial.println("-------------------------------------I am Slave1");
 //Wire.onRequest(requestEvents);
 //Wire.onReceive(receiveEvents);
   
-pinMode(enA, OUTPUT);
-pinMode(enB, OUTPUT);
-pinMode(in1, OUTPUT);
-pinMode(in2, OUTPUT);
-pinMode(in3, OUTPUT);
-pinMode(in4, OUTPUT);
+
 pinMode(enA1, OUTPUT);
 pinMode(enB1, OUTPUT);
 pinMode(in11, OUTPUT);
@@ -134,18 +120,12 @@ motorSpeedB = map(xAxis, 150, 220, 255, 50);
    //Serial.print(",");
    //Serial.println(motorSpeedA);
 
-analogWrite(enA, motorSpeedA); // Send PWM signal to motor A
-analogWrite(enB, motorSpeedB); // Send PWM signal to motor B
 analogWrite(enA1, motorSpeedA); // Send PWM signal to motor A1
 analogWrite(enB1, motorSpeedB); // Send PWM signal to motor B1
 }
 
 
 void forword(){Serial.println("forword");
-digitalWrite(in1, LOW);
-digitalWrite(in2, HIGH); 
-digitalWrite(in3, HIGH);
-digitalWrite(in4, LOW);
 digitalWrite(in11, HIGH);
 digitalWrite(in21, LOW); 
 digitalWrite(in31, HIGH);
@@ -153,10 +133,6 @@ digitalWrite(in41, LOW);
 }
 
 void backword(){Serial.println("backword");
-digitalWrite(in1, HIGH);
-digitalWrite(in2, LOW); 
-digitalWrite(in3, LOW);
-digitalWrite(in4, HIGH);
 digitalWrite(in11, LOW);
 digitalWrite(in21, HIGH); 
 digitalWrite(in31, LOW);
@@ -165,10 +141,6 @@ digitalWrite(in41, HIGH);
 
 //A ASSOCIAR INPUTS CORRETOS
 void turnRight(){Serial.println("turnRight");
-digitalWrite(in1, HIGH);
-digitalWrite(in2, LOW);
-digitalWrite(in3, HIGH);
-digitalWrite(in4, LOW);
 digitalWrite(in11, HIGH);
 digitalWrite(in21, LOW); 
 digitalWrite(in31, LOW);
@@ -177,10 +149,6 @@ digitalWrite(in41, HIGH);
 
 //A ASSOCIAR INPUTS CORRETOS
 void turnLeft(){Serial.println("turnLeft");
-digitalWrite(in1, LOW);
-digitalWrite(in2, HIGH); 
-digitalWrite(in3, LOW);
-digitalWrite(in4, HIGH);
 digitalWrite(in11, LOW);
 digitalWrite(in21, HIGH); 
 digitalWrite(in31, HIGH);
@@ -188,10 +156,6 @@ digitalWrite(in41, LOW);
 }
 
 void Stop(){
-digitalWrite(in1, LOW);
-digitalWrite(in2, LOW); 
-digitalWrite(in3, LOW);
-digitalWrite(in4, LOW);
 digitalWrite(in11, LOW);
 digitalWrite(in21, LOW); 
 digitalWrite(in31, LOW);
