@@ -5,22 +5,25 @@
 SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
 
 //ANTES DE CADA #define DIZER QUAL A POSIÇÃO TIPO BACK LEFT / FRONT RIGHT
+//FRONT RIGHT
+#define enB1 2
+#define in31 7
+#define in41 5
 
-#define enB 11
-#define in3 13
-#define in4 12
-
-#define enA 10
-#define in1 9
-#define in2 8
-
-#define enB1 3
-#define in31 2
-#define in41 4
-
-#define enA1 5
+//FRONT LEFT
+#define enA1 3
 #define in11 6
-#define in21 7
+#define in21 4
+
+//BACK LEFT
+#define enB 9
+#define in3 10
+#define in4 8
+
+//BACK RIGHT
+#define enA 11
+#define in1 13
+#define in2 12
 
 int n = 0;
 int a = 0;
