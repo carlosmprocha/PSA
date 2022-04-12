@@ -4,46 +4,44 @@
 
 SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
 
-//ANTES DE CADA #define DIZER QUAL A POSIÇÃO TIPO BACK LEFT / FRONT RIGHT
-//FRONT RIGHT
-#define enB1 2
-#define in31 7
-#define in41 5
+//LEFT
+#define enB 13
+#define in3 11
+#define in4 12
 
-//FRONT LEFT
-#define enA1 3
-#define in11 6
-#define in21 4
+//RIGHT
+#define enA 8
+#define in1 9
+#define in2 10
 
 
-int n = 0;
-int a = 0;
-int b = 0;
+char n[8] ;
+String msg;
 int numBytes;
 
-int xAxis=140, yAxis=140;
+int xAxis = 125, yAxis = 125;
 
 int motorSpeedA = 0;
 int motorSpeedB = 0;
 
 void setup() {
-  
-Wire.begin(I2C_SLAVE_ADDRESS);
-Serial.begin(9600);
-Serial.println("-------------------------------------I am Slave1");  
 
-//Wire.onRequest(requestEvents);
-//Wire.onReceive(receiveEvents);
-  
+  Wire.begin(I2C_SLAVE_ADDRESS);
+  Serial.begin(9600);
+  Serial.println("-------------------------------------I am Slave1");
 
-pinMode(enA1, OUTPUT);
-pinMode(enB1, OUTPUT);
-pinMode(in11, OUTPUT);
-pinMode(in21, OUTPUT);
-pinMode(in31, OUTPUT);
-pinMode(in41, OUTPUT);
+  //Wire.onRequest(requestEvents);
+  //Wire.onReceive(receiveEvents);
 
-delay(500);
+
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+
+  //delay(500);
 }
 
 void loop() {
@@ -53,115 +51,149 @@ void loop() {
 
   // RECEÇÃO DE DADOS DO MASTER -- A FAZER
   // COMO FAZER? MASTER - SLAVE: Y___ + X___ ? || APP - MASTER: Y___ + X___ ?
-  while (BT.available() >= 2) {
-    xAxis = BT.read();
-    delay(10);
-    yAxis = BT.read();
-   Serial.print(xAxis);
-   Serial.print(",");
-   Serial.println(yAxis);
-  }
-  
+
+  //  while (BT.available() >= 2) {
+  //    xAxis = BT.read();
+  //    delay(10);
+  //    yAxis = BT.read();
+  //    Serial.print(xAxis);
+  //    Serial.print(",");
+  //    Serial.println(yAxis);
+  //  }
+
+
+
+  Serial.println(F("---> recieved events"));
+  n[8] = Wire.read();
+  Serial.print(numBytes);
+  Serial.println(F("bytes recieved"));
+  Serial.print(F("recieved value : "));
+  Serial.println(n);
+  msg = String(n);
+
+  int y_pos = msg.indexOf("Y");
+  String y_value = msg.substring (y_pos + 1);
+  int x_pos = msg.indexOf("X");
+  String x_value = msg.substring (x_pos + 1, y_pos - 1);
+
+  xAxis = x_value.toInt();
+  yAxis = y_value.toInt();
+
+
+
   delay(10);
-  
+
   // Makes sure we receive corrent values
 
-if (xAxis > 130 && xAxis <150 && yAxis > 130 && yAxis <150){Stop();}
-
-
-if (yAxis > 130 && yAxis <150){    
-
-if (xAxis < 130){turnRight();
-motorSpeedA = map(xAxis, 130, 60, 0, 255);
-motorSpeedB = map(xAxis, 130, 60, 0, 255);    
-}
-
-if (xAxis > 150) {turnLeft();
-motorSpeedA = map(xAxis, 150, 220, 0, 255);
-motorSpeedB = map(xAxis, 150, 220, 0, 255); 
-}
-
-}else{
-
-if (xAxis > 130 && xAxis <150){   
-
-if (yAxis < 130){forword();}
-if (yAxis > 150){backword();}
-
-if (yAxis < 130){
-motorSpeedA = map(yAxis, 130, 60, 0, 255);
-motorSpeedB = map(yAxis, 130, 60, 0, 255); 
-}
-
-if (yAxis > 150){
-motorSpeedA = map(yAxis, 150, 220, 0, 255);
-motorSpeedB = map(yAxis, 150, 220, 0, 255);
- }
- 
-}else{
-
-if (yAxis < 130){forword();}
-if (yAxis > 150){backword();}
-
-if (xAxis < 130){
-motorSpeedA = map(xAxis, 130, 60, 255, 50);
-motorSpeedB = 255; 
- }
- 
-if (xAxis > 150){
-motorSpeedA = 255;
-motorSpeedB = map(xAxis, 150, 220, 255, 50); 
+  if (xAxis > 115 && xAxis < 135 && yAxis > 115 && yAxis < 135) {
+    Stop();
   }
-  
- } 
+
+
+  if (yAxis > 115 && yAxis < 135) {
+
+
+    // 130 - 115 | 60 - ?
+    if (xAxis < 115) {
+      turnRight();
+      motorSpeedA = map(xAxis, 115, 54, 0, 255);
+      motorSpeedB = map(xAxis, 115, 54, 0, 255);
+    }
+
+    if (xAxis > 135) {
+      turnLeft();
+      motorSpeedA = map(xAxis, 135, 197, 0, 255);
+      motorSpeedB = map(xAxis, 135, 197, 0, 255);
+    }
+
+  } else {
+
+    if (xAxis > 115 && xAxis < 135) {
+
+      if (yAxis < 115) {
+        forword();
+      }
+      if (yAxis > 135) {
+        backword();
+      }
+
+      if (yAxis < 115) {
+        motorSpeedA = map(yAxis, 115, 54, 0, 255);
+        motorSpeedB = map(yAxis, 115, 54, 0, 255);
+      }
+
+      if (yAxis > 135) {
+        motorSpeedA = map(yAxis, 135, 197, 0, 255);
+        motorSpeedB = map(yAxis, 135, 197, 0, 255);
+      }
+
+    } else {
+
+      if (yAxis < 115) {
+        forword();
+      }
+      if (yAxis > 135) {
+        backword();
+      }
+
+      if (xAxis < 115) {
+        motorSpeedA = map(xAxis, 115, 54, 255, 50);
+        motorSpeedB = 255;
+      }
+
+      if (xAxis > 135) {
+        motorSpeedA = 255;
+        motorSpeedB = map(xAxis, 135, 197, 255, 50);
+      }
+
+    }
+  }
+
+  //Serial.print(motorSpeedA);
+  //Serial.print(",");
+  //Serial.println(motorSpeedA);
+
+  analogWrite(enA, motorSpeedA); // Send PWM signal to motor A1
+  analogWrite(enB, motorSpeedB); // Send PWM signal to motor B1
 }
 
-   //Serial.print(motorSpeedA);
-   //Serial.print(",");
-   //Serial.println(motorSpeedA);
 
-analogWrite(enA1, motorSpeedA); // Send PWM signal to motor A1
-analogWrite(enB1, motorSpeedB); // Send PWM signal to motor B1
+void forword() {
+  Serial.println("forword");
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 }
 
-
-void forword(){Serial.println("forword");
-digitalWrite(in11, HIGH);
-digitalWrite(in21, LOW); 
-digitalWrite(in31, HIGH);
-digitalWrite(in41, LOW);
+void backword() {
+  Serial.println("backword");
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
 }
 
-void backword(){Serial.println("backword");
-digitalWrite(in11, LOW);
-digitalWrite(in21, HIGH); 
-digitalWrite(in31, LOW);
-digitalWrite(in41, HIGH);                
+void turnRight() {
+  Serial.println("turnRight");
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 }
 
-//A ASSOCIAR INPUTS CORRETOS
-void turnRight(){Serial.println("turnRight");
-digitalWrite(in11, HIGH);
-digitalWrite(in21, LOW); 
-digitalWrite(in31, LOW);
-digitalWrite(in41, HIGH);               
+void turnLeft() {
+  Serial.println("turnLeft");
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
 }
 
-//A ASSOCIAR INPUTS CORRETOS
-void turnLeft(){Serial.println("turnLeft");
-digitalWrite(in11, LOW);
-digitalWrite(in21, HIGH); 
-digitalWrite(in31, HIGH);
-digitalWrite(in41, LOW);                 
+void Stop() {
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);
+  Serial.println("stop");
 }
-
-void Stop(){
-digitalWrite(in11, LOW);
-digitalWrite(in21, LOW); 
-digitalWrite(in31, LOW);
-digitalWrite(in41, LOW);
-Serial.println("stop");
-}
-
-
-
