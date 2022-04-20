@@ -41,8 +41,8 @@ void setup() {
   //Request value of n to slave after change
   Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
   n = Wire.read();
-  Serial.print(F(" new recieved value : "));
-  Serial.println(n);
+ // Serial.print(F(" new recieved value : "));
+//  Serial.println(n);
 
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
@@ -81,7 +81,7 @@ void setup() {
   }
 
   // wait 1 seconds for connection:
-  delay(1000);
+  //delay(1000);
 
   // start the web server on port 80
   server.begin();
@@ -111,13 +111,14 @@ void loop() {
   WiFiClient client = server.available();   // listen for incoming clients
 
   if (client) {                             // if you get a client,
-    Serial.println("new client");           // print a message out the serial port
+    Serial.println("  new client");           // print a message out the serial port
     String currentLine = "";                // make a String to hold incoming data from the client
     while (client.connected()) {            // loop while the client's connected
       delayMicroseconds(10);                // This is required for the Arduino Nano RP2040 Connect - otherwise it will loop so fast that SPI will never be served.
       if (client.available()) {             // if there's bytes to read from the client,
         char c = client.read();             // read a byte, then
-        Serial.write(c);                    // print it out the serial monitor
+        //Serial.write(c);                    // print it out the serial monitor
+         //Serial.println("Recebido: "+currentLine);
         if (c == '\n') {                    // if the byte is a newline character
 
           // if the current line is blank, you got two newline characters in a row.
@@ -147,15 +148,7 @@ void loop() {
         }
 
         // Check to see the client request
-        if (currentLine.indexOf("Y")>0 && currentLine.indexOf("H")==0){
-
-
-
-
-
-
-
-
+        if (currentLine.indexOf("HTTP/1.1")>0 ){ // && currentLine.indexOf("H")==0
 
 
 
@@ -173,13 +166,8 @@ void loop() {
           Serial.println("Recebido: "+currentLine);
           Serial.println("A mandar X: "+x_value);
           Serial.println("A mandar Y: " + y_value);
+         
           
-          
-
-
-
-
-
 
 
 
@@ -190,27 +178,31 @@ void loop() {
           //Request value of n to slave
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
+         // Serial.print(F("recieved value : "));
+         // Serial.println(n);
           //Send value "X" + x_pos + "Y" + y_pos to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
           String  msg = "X" + x_value + "Y" + y_value;
-          char buffer[8];
-          msg.toCharArray(buffer, 8);
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
           Wire.write(buffer);
           Serial.print(F("sending value : "));
           Serial.println(msg);
+          //Serial.print(buffer);
           //delay(10000);
           Wire.endTransmission();
           Serial.print(" ");
           //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+         // Serial.print(F(" new recieved value : "));
+         // Serial.println(n);
           //delay(5000);
           //go=3;
+           client.stop();
         }
+
+
 
 
       }
@@ -219,7 +211,7 @@ void loop() {
 
     // close the connection:
     client.stop();
-    Serial.println("client disconnected");
+    Serial.println("  client disconnected");
   }
 }
 
@@ -240,3 +232,5 @@ void printWiFiStatus() {
   Serial.println(ip);
 
 }
+
+
