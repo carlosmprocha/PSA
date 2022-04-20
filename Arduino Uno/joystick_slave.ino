@@ -74,7 +74,7 @@ void loop() {
   int y_pos = msg.indexOf("Y");
   String y_value = msg.substring (y_pos + 1);
   int x_pos = msg.indexOf("X");
-  String x_value = msg.substring (x_pos + 1, y_pos - 1);
+  String x_value = msg.substring (x_pos + 1, y_pos );
 
   xAxis = x_value.toInt();
   yAxis = y_value.toInt();
