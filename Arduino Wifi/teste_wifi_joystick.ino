@@ -125,7 +125,7 @@ void loop() {
           if (currentLine.length() == 0) {
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
             // and a content-type so the client knows what's coming, then a blank line:
-            client.println("HTTP/1.1 200 OK");
+            //client.println("HTTP/1.1 200 OK");
             client.println("Content-type:text/html");
             client.println();
 
@@ -147,7 +147,7 @@ void loop() {
         }
 
         // Check to see the client request
-        if (1) {
+        if (currentLine.indexOf("Y")>0 && currentLine.indexOf("H")==0){
 
 
 
@@ -163,14 +163,18 @@ void loop() {
 
           // different member versions of find in the same order as above:
           int y_pos = currentLine.indexOf("Y");
-          String y_value = currentLine.substring (y_pos + 1);
+          int H_pos = currentLine.indexOf("H");
+          String y_value = currentLine.substring (y_pos + 1,H_pos-1);
 
           int x_pos = currentLine.indexOf("X");
 
-          String x_value = currentLine.substring (x_pos + 1, y_pos - 1);
+          String x_value = currentLine.substring (x_pos + 1, y_pos);
 
-
-
+          Serial.println("Recebido: "+currentLine);
+          Serial.println("A mandar X: "+x_value);
+          Serial.println("A mandar Y: " + y_value);
+          
+          
 
 
 
@@ -190,7 +194,7 @@ void loop() {
           Serial.println(n);
           //Send value "X" + x_pos + "Y" + y_pos to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          String  msg = "X" + String(x_pos) + "Y" + String(y_pos);
+          String  msg = "X" + x_value + "Y" + y_value;
           char buffer[8];
           msg.toCharArray(buffer, 8);
           Wire.write(buffer);
@@ -224,7 +228,7 @@ void loop() {
 void printWiFiStatus() {
   // print the SSID of the network you're attached to:
   Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+  //Serial.println(WiFi.SSID());
   // print your WiFi shield's IP address:
 
   IPAddress ip = WiFi.localIP();
