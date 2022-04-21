@@ -150,7 +150,7 @@ void loop() {
         }
 
         // Check to see if the client request was "GET /H" or "GET /L":
-        if (currentLine.endsWith("GET /N")) {
+        if (currentLine.endsWith("GET /H")) {
           //go = 1;
           //while( go == 1){
           //Request value of n to slave
@@ -201,7 +201,7 @@ void loop() {
           Serial.println(n);
           //go=3;
         }
-        if (currentLine.endsWith("GET /E")) {
+        if (currentLine.endsWith("GET /D")) {
           //go = 1;
           //while( go == 1){
           //Request value of n to slave
@@ -251,7 +251,7 @@ void loop() {
           Serial.println(n);
           //go=3;
         }
-        if (currentLine.endsWith("GET /S")) {
+        if (currentLine.endsWith("GET /L")) {
           //go = 1;
           //while( go == 1){
           //Request value of n to slave
@@ -301,7 +301,7 @@ void loop() {
           Serial.println(n);
           //go=3;
         }
-        if (currentLine.endsWith("GET /O")) {
+        if (currentLine.endsWith("GET /E")) {
           //go = 1;
           //while( go == 1){
           //Request value of n to slave
@@ -341,6 +341,31 @@ void loop() {
           Wire.write(8);
           Serial.print(F("sending value : "));
           Serial.println(8);
+          Wire.endTransmission();
+          Serial.print(" ");
+
+          //Request value of n to slave after change
+          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
+          n = Wire.read();
+          Serial.print(F(" new recieved value : "));
+          Serial.println(n);
+          //go=3;
+        }
+                if (currentLine.endsWith("GET /S")) {
+          //go = 1;
+          //while( go == 1){
+          //Request value of n to slave
+
+          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
+          n = Wire.read();
+          Serial.print(F("recieved value : "));
+          Serial.println(n);
+
+          //Send value 9 to slave
+          Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
+          Wire.write(9);
+          Serial.print(F("sending value : "));
+          Serial.println(9);
           Wire.endTransmission();
           Serial.print(" ");
 
