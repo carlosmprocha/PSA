@@ -110,7 +110,7 @@ void loop() {
     //  analogWrite(INB_PIN, 0); // Velocidade do motor
   }
 
-  if (n == 10) {
+  if (n == 9) {
 
 
     Serial.println("PARAR");
