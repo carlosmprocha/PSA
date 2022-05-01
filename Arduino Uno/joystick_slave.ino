@@ -71,9 +71,10 @@ void loop() {
     Serial.print(numBytes);
     Serial.println(F("bytes recieved"));
     Serial.print(F("recieved value : "));
-    Serial.println(n);
+    //    Serial.println(n);
     Serial.println(buf);
-    msg = String(n);
+    msg = String(buf);
+    Serial.println(msg);
 
     int y_pos = msg.indexOf("Y");
     String y_value = msg.substring (y_pos + 1);
@@ -202,7 +203,7 @@ void Stop() {
   Serial.println("stop");
 }
 
-void requestEvent() {
+void requestEvents() {
 
   if (flagButton == false)
   {
@@ -211,7 +212,7 @@ void requestEvent() {
   }
 }
 
-void receiveEvent(int howMany) {
+void receiveEvents(int howMany) {
 
   for (int i = 0; i < howMany; i++) {
     buf[i] = Wire.read();
