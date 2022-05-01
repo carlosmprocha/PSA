@@ -41,8 +41,8 @@ void setup() {
   //Request value of n to slave after change
   Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
   n = Wire.read();
- // Serial.print(F(" new recieved value : "));
-//  Serial.println(n);
+  // Serial.print(F(" new recieved value : "));
+  //  Serial.println(n);
 
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
@@ -118,7 +118,7 @@ void loop() {
       if (client.available()) {             // if there's bytes to read from the client,
         char c = client.read();             // read a byte, then
         //Serial.write(c);                    // print it out the serial monitor
-         //Serial.println("Recebido: "+currentLine);
+        //Serial.println("Recebido: "+currentLine);
         if (c == '\n') {                    // if the byte is a newline character
 
           // if the current line is blank, you got two newline characters in a row.
@@ -148,7 +148,7 @@ void loop() {
         }
 
         // Check to see the client request
-        if (currentLine.indexOf("HTTP/1.1")>0 ){ // && currentLine.indexOf("H")==0
+        if (currentLine.indexOf("HTTP/1.1") > 0 ) { // && currentLine.indexOf("H")==0
 
 
 
@@ -157,17 +157,17 @@ void loop() {
           // different member versions of find in the same order as above:
           int y_pos = currentLine.indexOf("Y");
           int H_pos = currentLine.indexOf("H");
-          String y_value = currentLine.substring (y_pos + 1,H_pos-1);
+          String y_value = currentLine.substring (y_pos + 1, H_pos - 1);
 
           int x_pos = currentLine.indexOf("X");
 
           String x_value = currentLine.substring (x_pos + 1, y_pos);
 
-          Serial.println("Recebido: "+currentLine);
-          Serial.println("A mandar X: "+x_value);
+          Serial.println("Recebido: " + currentLine);
+          Serial.println("A mandar X: " + x_value);
           Serial.println("A mandar Y: " + y_value);
-         
-          
+
+
 
 
 
@@ -178,14 +178,14 @@ void loop() {
           //Request value of n to slave
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-         // Serial.print(F("recieved value : "));
-         // Serial.println(n);
+          // Serial.print(F("recieved value : "));
+          // Serial.println(n);
           //Send value "X" + x_pos + "Y" + y_pos to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
           String  msg = "X" + x_value + "Y" + y_value;
           char buffer[9];
           msg.toCharArray(buffer, 9);
-          Wire.write(buffer);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
           Serial.println(msg);
           //Serial.print(buffer);
@@ -195,11 +195,11 @@ void loop() {
           //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-         // Serial.print(F(" new recieved value : "));
-         // Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //delay(5000);
           //go=3;
-           client.stop();
+          client.stop();
         }
 
 
