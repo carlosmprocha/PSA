@@ -14,8 +14,11 @@ SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
 #define in1 9
 #define in2 10
 
+bool flag1 = LOW;
+boolean flagButton = false;
 
-char n[8] ;
+//char n[8] ;
+char buf[9] = "";
 String msg;
 int numBytes;
 
@@ -30,8 +33,8 @@ void setup() {
   Serial.begin(9600);
   Serial.println("-------------------------------------I am Slave1");
 
-  //Wire.onRequest(requestEvents);
-  //Wire.onReceive(receiveEvents);
+  Wire.onRequest(requestEvents);
+  Wire.onReceive(receiveEvents);
 
 
   pinMode(enA, OUTPUT);
@@ -61,28 +64,29 @@ void loop() {
   //    Serial.println(yAxis);
   //  }
 
+  if (flag1 == HIGH) {
 
+    Serial.println(F("---> recieved events"));
+    //buf[9] = Wire.read();
+    Serial.print(numBytes);
+    Serial.println(F("bytes recieved"));
+    Serial.print(F("recieved value : "));
+    Serial.println(n);
+    Serial.println(buf);
+    msg = String(n);
 
-  Serial.println(F("---> recieved events"));
-  n[8] = Wire.read();
-  Serial.print(numBytes);
-  Serial.println(F("bytes recieved"));
-  Serial.print(F("recieved value : "));
-  Serial.println(n);
-  msg = String(n);
+    int y_pos = msg.indexOf("Y");
+    String y_value = msg.substring (y_pos + 1);
+    int x_pos = msg.indexOf("X");
+    String x_value = msg.substring (x_pos + 1, y_pos );
 
-  int y_pos = msg.indexOf("Y");
-  String y_value = msg.substring (y_pos + 1);
-  int x_pos = msg.indexOf("X");
-  String x_value = msg.substring (x_pos + 1, y_pos );
+    xAxis = x_value.toInt();
+    yAxis = y_value.toInt();
 
-  xAxis = x_value.toInt();
-  yAxis = y_value.toInt();
+    delay(10);
 
-
-
-  delay(10);
-
+    flag1 = LOW;
+  }
   // Makes sure we receive corrent values
 
   if (xAxis > 115 && xAxis < 135 && yAxis > 115 && yAxis < 135) {
@@ -196,4 +200,22 @@ void Stop() {
   digitalWrite(in3, LOW);
   digitalWrite(in4, LOW);
   Serial.println("stop");
+}
+
+void requestEvent() {
+
+  if (flagButton == false)
+  {
+    Wire.write(' ');
+    Serial.println("no call");
+  }
+}
+
+void receiveEvent(int howMany) {
+
+  for (int i = 0; i < howMany; i++) {
+    buf[i] = Wire.read();
+  }
+  flag1 = HIGH;
+
 }
