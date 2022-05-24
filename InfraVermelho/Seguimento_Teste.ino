@@ -32,6 +32,8 @@ void setup() {
   digitalWrite(dirD, HIGH);
   digitalWrite(ndirE, LOW);
   digitalWrite(ndirD, LOW);
+  analogWrite(ME, 0); //O motor esquerdo fica ligado
+  analogWrite(MD, 0);
   
   //Setamos os pinos dos sensores como entrada
   pinMode(pin_SE, INPUT);
