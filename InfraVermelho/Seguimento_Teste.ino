@@ -28,8 +28,8 @@ void setup() {
   pinMode(ndirD, OUTPUT);
   
   //Setamos a direção inicial do motor como 0, isso fará com que ambos os motores girem para frente
-  digitalWrite(dirE, LOW);
-  digitalWrite(dirD, LOW);
+  digitalWrite(dirE, HIGH);
+  digitalWrite(dirD, HIGH);
   digitalWrite(ndirE, LOW);
   digitalWrite(ndirD, LOW);
   
