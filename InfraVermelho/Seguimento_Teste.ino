@@ -18,6 +18,7 @@ int velocidade_min = 75;
 int color_threshold = 100;
 
 void setup() {
+  Serial.begin(9600);
   // put your setup code here, to run once:
   //Setamos os pinos de controle dos motores como saída
   pinMode(ME, OUTPUT);
@@ -50,20 +51,24 @@ void loop() {
   if((SensorE < color_threshold ) && (SensorD < color_threshhold)){ // Se detectar na extremidade das faixas duas cores brancas
   analogWrite(ME, velocidade); // Ambos motores ligam na mesma velocidade
   analogWrite(MD, velocidade);
+  Serial.println("bb");
   }
   
   if((SensorE < color_threshold ) && (SensorD > color_threshold)){ // Se detectar um lado preto e o outro branco
   analogWrite(ME, velocidade_min); // O motor esquerdo desliga
   analogWrite(MD, velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
+  Serial.println("bp");
   }
   
   if((SensorE > color_threshold) && (SensorD < color_threshold)){ // Se detectar um lado branco e o outro preto
   analogWrite(ME, velocidade); //O motor esquerdo fica ligado
   analogWrite(MD, velocidade_min); // O motor direita desliga, fazendo assim o carrinho virar no outro sentido
+  Serial.println("pb");
   }
     if((SensorE > color_threshold) && (SensorD > color_threshold)){ // Se detectar um lado branco e o outro preto
-  analogWrite(ME, 0); //O motor esquerdo fica ligado
-  analogWrite(MD, 0); // O motor direita desliga, fazendo assim o carrinho virar no outro sentido
+  analogWrite(ME, 0); 
+  analogWrite(MD, 0); 
+      Serial.println("pp");
   }
 
 }
