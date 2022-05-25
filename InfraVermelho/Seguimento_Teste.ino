@@ -1,10 +1,10 @@
 //Definição dos pinos de controlo do motor
-#define ME 10 // Pino_Velocidade Motor Esquerda ( 0 a 255);
-#define MD 9 //Pino_Velocidade Motor Direita ( 0 a 255);
-#define dirE 12 //Pino_Direção do Motor Esquerdo: Para frente / Para trás (HIGH ou LOW);
-#define ndirE 11
-#define dirD 8 //Pino_Direção do Motor Direito: Para frente / Para trás (HIGH ou LOW);
-#define ndirD 13
+#define ME 10                //Pino_Velocidade Motor Esquerda (0 a 255);
+#define MD 9                 //Pino_Velocidade Motor Direita (0 a 255);
+#define dirE 12              //Pino_Direção do Motor Esquerdo: Para frente HIGH;
+#define ndirE 11             //Pino_Direção do Motor Esquerdo: Para frente LOW;
+#define dirD 8               //Pino_Direção do Motor Direito: Para frente HIGH;
+#define ndirD 13             //Pino_Direção do Motor Direito: Para frente LOW;
 
 //Definição dos pinos dos sensores
 #define pin_SE 7
@@ -12,15 +12,18 @@
 bool SensorE = 0;
 bool SensorD = 0;
 
-//variável responsável por controlar a velocidade dos motores
+//variáveis responsáveis por controlar a velocidade dos motores
 int velocidade = 150;
 int velocidade_min = 75;
+
+//variável responsável por definir a diferença entre preto e branco
+//menor que color_threshold -> branco; maior que color_threshold -> preto
 int color_threshold = 100;
 
 void setup() {
   Serial.begin(9600);
-  // put your setup code here, to run once:
-  //Setamos os pinos de controle dos motores como saída
+  
+  //pinos de controle dos motores como saída
   pinMode(ME, OUTPUT);
   pinMode(MD, OUTPUT);
   pinMode(dirE, OUTPUT);
@@ -28,7 +31,7 @@ void setup() {
   pinMode(ndirE, OUTPUT);
   pinMode(ndirD, OUTPUT);
   
-  //Setamos a direção inicial do motor como 0, isso fará com que ambos os motores girem para frente
+  //direção inicial do motor
   digitalWrite(dirE, HIGH);
   digitalWrite(dirD, HIGH);
   digitalWrite(ndirE, LOW);
@@ -36,7 +39,7 @@ void setup() {
   analogWrite(ME, 0); //O motor esquerdo fica ligado
   analogWrite(MD, 0);
   
-  //Setamos os pinos dos sensores como entrada
+  //pinos dos sensores como entrada
   pinMode(pin_SE, INPUT);
   pinMode(pin_SD, INPUT);
 }
