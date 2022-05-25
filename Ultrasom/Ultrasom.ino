@@ -1,7 +1,7 @@
 #include<Servo.h>
 
-int trig = 8;
-int echo = 9;
+int trig = 8;//pulso
+int echo = 9;//resposta do pulso
 int dt = 10;
  int flag=0;
 Servo servo;
