@@ -81,11 +81,13 @@ void loop() {
   if (alert == LOW) {
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(NORMAL);
   }
   if (alert == HIGH) {
     analogWrite(ME, 0);
     analogWrite(MD, 0);
     delay(500);
+    Serial.println(ALERTA);
 
     //TURN RIGHT
     digitalWrite(dirE, HIGH);
@@ -94,6 +96,7 @@ void loop() {
     digitalWrite(ndirD, HIGH);
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(DIREITA);
     delay(t_turn);
 
     analogWrite(ME, 0);
@@ -107,6 +110,7 @@ void loop() {
     digitalWrite(ndirD, LOW);
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(FRENTE);
     delay(t_front);
 
     analogWrite(ME, 0);
@@ -120,6 +124,7 @@ void loop() {
     digitalWrite(ndirD, LOW);
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(ESQUERDA);
     delay(t_turn);
 
     analogWrite(ME, 0);
@@ -133,6 +138,7 @@ void loop() {
     digitalWrite(ndirD, LOW);
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(FRENTE);
     delay(t_front);
 
     analogWrite(ME, 0);
@@ -146,6 +152,7 @@ void loop() {
     digitalWrite(ndirD, LOW);
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(ESQUERDA);
     delay(t_turn);
 
     analogWrite(ME, 0);
@@ -160,6 +167,7 @@ void loop() {
     digitalWrite(ndirD, LOW);
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(FRENTE);
     delay(t_front);
 
     analogWrite(ME, 0);
@@ -174,6 +182,7 @@ void loop() {
     digitalWrite(ndirD, HIGH);
     analogWrite(ME, velocidade);
     analogWrite(MD, velocidade);
+    Serial.println(DIREITA);
     delay(t_turn);
 
     analogWrite(ME, 0);
