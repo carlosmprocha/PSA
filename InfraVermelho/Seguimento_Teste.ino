@@ -50,28 +50,28 @@ void loop() {
   SensorE = analogRead(pin_SE);
   SensorD = analogRead(pin_SD);
   
-  //Aqui está toda a lógica de comportamento do robô: Para a cor branca atribuímos o valor 0 e, para a cor preta, o valor 1.
-  if((SensorE < color_threshold ) && (SensorD < color_threshhold)){ // Se detectar na extremidade das faixas duas cores brancas
-  analogWrite(ME, velocidade); // Ambos motores ligam na mesma velocidade
-  analogWrite(MD, velocidade);
-  Serial.println("bb");
+  //Aqui está toda a lógica de comportamento do robô:
+  if((SensorE < color_threshold ) && (SensorD < color_threshhold)){ //Ambos os Sensores detetam cor branca, podem andar para a frente
+    analogWrite(ME, velocidade); // Ambos motores ligam na mesma velocidade
+    analogWrite(MD, velocidade);
+    Serial.println("bb"); // informar que estão brancos os dois
   }
   
-  else if((SensorE < color_threshold ) && (SensorD > color_threshold)){ // Se detectar um lado preto e o outro branco
-  analogWrite(ME, velocidade_min); // O motor esquerdo desliga
-  analogWrite(MD, velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
-  Serial.println("bp");
+  else if((SensorE < color_threshold ) && (SensorD > color_threshold)){ // Esquerdo branco e Direito preto
+    analogWrite(ME, velocidade_min); // O motor esquerdo desliga
+    analogWrite(MD, velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
+    Serial.println("bp");
   }
   
-  else if((SensorE > color_threshold) && (SensorD < color_threshold)){ // Se detectar um lado branco e o outro preto
-  analogWrite(ME, velocidade); //O motor esquerdo fica ligado
-  analogWrite(MD, velocidade_min); // O motor direita desliga, fazendo assim o carrinho virar no outro sentido
-  Serial.println("pb");
+  else if((SensorE > color_threshold) && (SensorD < color_threshold)){ // Esquerdo preto e Direito branco
+    analogWrite(ME, velocidade); //O motor esquerdo fica ligado
+    analogWrite(MD, velocidade_min); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
+    Serial.println("pb");
   }
-  else if((SensorE > color_threshold) && (SensorD > color_threshold)){ // Se detectar um lado branco e o outro preto
-  analogWrite(ME, 0); 
-  analogWrite(MD, 0); 
-      Serial.println("pp");
+  
+  else if((SensorE > color_threshold) && (SensorD > color_threshold)){ // Ambos os sensores detetam preto
+    analogWrite(ME, 0); // ambos os motores desligam
+    analogWrite(MD, 0); 
+    Serial.println("pp");
   }
-
 }
