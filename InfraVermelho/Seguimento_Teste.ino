@@ -57,18 +57,18 @@ void loop() {
   Serial.println("bb");
   }
   
-  if((SensorE < color_threshold ) && (SensorD > color_threshold)){ // Se detectar um lado preto e o outro branco
+  else if((SensorE < color_threshold ) && (SensorD > color_threshold)){ // Se detectar um lado preto e o outro branco
   analogWrite(ME, velocidade_min); // O motor esquerdo desliga
   analogWrite(MD, velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
   Serial.println("bp");
   }
   
-  if((SensorE > color_threshold) && (SensorD < color_threshold)){ // Se detectar um lado branco e o outro preto
+  else if((SensorE > color_threshold) && (SensorD < color_threshold)){ // Se detectar um lado branco e o outro preto
   analogWrite(ME, velocidade); //O motor esquerdo fica ligado
   analogWrite(MD, velocidade_min); // O motor direita desliga, fazendo assim o carrinho virar no outro sentido
   Serial.println("pb");
   }
-    if((SensorE > color_threshold) && (SensorD > color_threshold)){ // Se detectar um lado branco e o outro preto
+  else if((SensorE > color_threshold) && (SensorD > color_threshold)){ // Se detectar um lado branco e o outro preto
   analogWrite(ME, 0); 
   analogWrite(MD, 0); 
       Serial.println("pp");
