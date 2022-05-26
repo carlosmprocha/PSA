@@ -18,7 +18,7 @@ int velocidade_min = 75;
 
 //variável responsável por definir a diferença entre preto e branco
 //menor que color_threshold -> branco; maior que color_threshold -> preto
-int color_threshold = 100;
+int color_threshold = 350;
 
 void setup() {
   Serial.begin(9600);
