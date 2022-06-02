@@ -52,19 +52,37 @@ void loop() {
   
   //Aqui está toda a lógica de comportamento do robô:
   if((SensorE < color_threshold ) && (SensorD < color_threshhold)){ //Ambos os Sensores detetam cor branca, podem andar para a frente
+    
+      digitalWrite(dirE, HIGH);
+     digitalWrite(dirD, HIGH);
+    digitalWrite(ndirE, LOW);
+    digitalWrite(ndirD, LOW);
+    
     analogWrite(ME, velocidade); // Ambos motores ligam na mesma velocidade
     analogWrite(MD, velocidade);
     Serial.println("bb"); // informar que estão brancos os dois
   }
   
   else if((SensorE < color_threshold ) && (SensorD > color_threshold)){ // Esquerdo branco e Direito preto
+    
+          digitalWrite(dirE, LOW);
+     digitalWrite(dirD, HIGH);
+    digitalWrite(ndirE, HIGH);
+    digitalWrite(ndirD, LOW);
+    
     analogWrite(ME, velocidade_min); // O motor esquerdo desliga
-    analogWrite(MD, velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
+    analogWrite(MD, velocidade_min); // O motor direito fica ligado, fazendo assim o carrinho virar
     Serial.println("bp");
   }
   
   else if((SensorE > color_threshold) && (SensorD < color_threshold)){ // Esquerdo preto e Direito branco
-    analogWrite(ME, velocidade); //O motor esquerdo fica ligado
+   
+          digitalWrite(dirE, HIGH);
+     digitalWrite(dirD, LOW);
+    digitalWrite(ndirE, LOW);
+    digitalWrite(ndirD, HIGH);
+    
+    analogWrite(ME, velocidade_min); //O motor esquerdo fica ligado
     analogWrite(MD, velocidade_min); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
     Serial.println("pb");
   }
