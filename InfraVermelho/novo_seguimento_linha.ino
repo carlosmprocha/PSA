@@ -1,3 +1,4 @@
+#include "Timer.h"
 //Definição dos pinos de controlo do motor
 #define ME 10                //Pino_Velocidade Motor Esquerda (0 a 255);
 #define MD 9                 //Pino_Velocidade Motor Direita (0 a 255);
@@ -19,6 +20,11 @@ int velocidade_min = 80;
 //variável responsável por definir a diferença entre preto e branco
 //menor que color_threshold -> branco; maior que color_threshold -> preto
 int color_threshold = 350;
+
+int t_search = 200;
+
+Timer timer;
+// for micro second resolution:
 
 void setup() {
   Serial.begin(9600);
@@ -52,44 +58,70 @@ void loop() {
 
   //Aqui está toda a lógica de comportamento do robô:
   if ((SensorE < color_threshold ) && (SensorD < color_threshold)) { //Ambos os Sensores detetam cor branca, podem andar para a frente
-
-    digitalWrite(dirE, HIGH);
-    digitalWrite(dirD, HIGH);
-    digitalWrite(ndirE, LOW);
-    digitalWrite(ndirD, LOW);
-
-    analogWrite(ME, velocidade); // Ambos motores ligam na mesma velocidade
-    analogWrite(MD, velocidade);
+    timer.stop();
+    straight (velocidade);
     Serial.println("bb"); // informar que estão brancos os dois
   }
 
   else if ((SensorE < color_threshold ) && (SensorD > color_threshold)) { // Esquerdo branco e Direito preto
-
-    digitalWrite(dirE, LOW);
-    digitalWrite(dirD, HIGH);
-    digitalWrite(ndirE, HIGH);
-    digitalWrite(ndirD, LOW);
-
-    analogWrite(ME, velocidade); // O motor esquerdo desliga
-    analogWrite(MD, velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
+    timer.stop();
+    spin_left(velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
     Serial.println("bp");
   }
 
   else if ((SensorE > color_threshold) && (SensorD < color_threshold)) { // Esquerdo preto e Direito branco
-
-    digitalWrite(dirE, HIGH);
-    digitalWrite(dirD, LOW);
-    digitalWrite(ndirE, LOW);
-    digitalWrite(ndirD, HIGH);
-
-    analogWrite(ME, velocidade); //O motor esquerdo fica ligado
-    analogWrite(MD, velocidade); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
+    timer.stop();
+    spin_right(velocidade); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
     Serial.println("pb");
   }
 
-  else if ((SensorE > color_threshold) && (SensorD > color_threshold)) { // Ambos os sensores detetam preto
-    analogWrite(ME, 0); // ambos os motores desligam
-    analogWrite(MD, 0);
+  else if ((SensorE > color_threshold) && (SensorD > color_threshold) && timer.read() == 0 ) { // Ambos os sensores detetam preto
+    timer.start();
+    spin_left(velocidade); // O motor direito fica ligado, fazendo assim o carrinho virar
     Serial.println("pp");
   }
+
+  else if ((SensorE > color_threshold) && (SensorD > color_threshold) && timer.read() != 0 ) {
+
+    if (timer.read() > t_search) {
+      spin_right(velocidade); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
+
+      if (timer.read() > 2 * t_search) {
+        brake();
+      }
+    }
+  }
 }
+
+int straight(int speed) {
+  digitalWrite(dirE, HIGH);
+  digitalWrite(dirD, HIGH);
+  digitalWrite(ndirE, LOW);
+  digitalWrite(ndirD, LOW);
+  analogWrite(ME, speed); // Ambos motores ligam na mesma velocidade
+  analogWrite(MD, speed);
+}
+
+int spin_right (int speed) {
+  digitalWrite(dirE, HIGH);
+  digitalWrite(dirD, LOW);
+  digitalWrite(ndirE, LOW);
+  digitalWrite(ndirD, HIGH);
+  analogWrite(ME, speed); //O motor esquerdo fica ligado
+  analogWrite(MD, speed);
+}
+
+int spin_left (int speed) {
+  digitalWrite(dirE, LOW);
+  digitalWrite(dirD, HIGH);
+  digitalWrite(ndirE, HIGH);
+  digitalWrite(ndirD, LOW);
+  analogWrite(ME, speed); //O motor esquerdo fica ligado
+  analogWrite(MD, speed);
+}
+
+int brake() {
+  analogWrite(ME, 0); //O motor esquerdo fica ligado
+  analogWrite(MD, 0);
+}
+
