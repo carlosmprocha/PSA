@@ -22,7 +22,7 @@
 #define MAX_SPEED_OFFSET 2
 #define speedTurn 180
 
-#define timeTurn 500
+#define timeTurn 50
 #define timeStop 100
 #define timeReverse 300
 
