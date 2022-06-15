@@ -8,8 +8,8 @@
 // Pinos
 #define TRIG_PIN 4
 #define ECHO_PIN 7
-#define ME 10            // Pino_Velocidade Motor Esquerda ( 0 a 255);
-#define MD 9             //Pino_Velocidade Motor Direita ( 0 a 255);
+#define ME 6            // Pino_Velocidade Motor Esquerda ( 0 a 255);
+#define MD 5             //Pino_Velocidade Motor Direita ( 0 a 255);
 #define dirE 12           //Pino_Direção do Motor Esquerdo: Para frente / Para trás (HIGH ou LOW);
 #define ndirE 11
 #define dirD 8          //Pino_Direção do Motor Direito: Para frente / Para trás (HIGH ou LOW);
@@ -58,7 +58,7 @@ void setup() {
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
 
-  servo.attach(6);
+  servo.attach(10);
 
 
   //------- O QUE FAZ? ----------
