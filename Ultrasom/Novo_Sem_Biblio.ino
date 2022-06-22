@@ -1,7 +1,7 @@
 //NewPing Library https://github.com/livetronic/Arduino-NewPing//
 //Servo Library https://github.com/arduino-libraries/Servo.git //
 
-#include <NewPing.h>
+//#include <NewPing.h>
 #include <Servo.h>
 
 // -----CONFIRMAR--------
@@ -37,7 +37,7 @@
 
 
 
-NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);
+//NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);
 Servo servo;
 
 boolean goesForward = false;
