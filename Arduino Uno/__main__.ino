@@ -1,9 +1,17 @@
+
 #include "Timer.h"
-#include <SoftwareSerial.h>
 #include <Wire.h>
 # define I2C_SLAVE_ADDRESS 11
 
-SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
+//const byte interruptPinA = 2;
+//const byte interruptPinB = 3;
+//double count = 1;
+//long protectedCount = 0;
+//long previousCount = 0;
+//#define readA bitRead (PIND,2) //fastest than digitalRead()
+//#define readB bitRead (PIND,3) //fastest than digitalRead()
+
+//SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
 
 //LEFT
 #define enB 6
@@ -15,7 +23,6 @@ SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
 #define in1 13
 #define in2 8
 
-//Definição dos pinos dos sensores
 #define pin_SE A0
 #define pin_SD A1
 int SensorE = 0;
@@ -34,10 +41,10 @@ int xAxis = 150, yAxis = 150;
 int motorSpeedA = 0;
 int motorSpeedB = 0;
 
-int velocidade_1 = 110;
+int velocidade_1 = 150;
 int velocidade_2 = 200;
 
-bool AUTO = 0;
+bool AUTO = false;
 
 int color_threshold = 250;
 
@@ -65,6 +72,12 @@ void setup() {
   pinMode(pin_SE, INPUT);
   pinMode(pin_SD, INPUT);
 
+  //  //Serial.begin (9600);
+  //  pinMode (interruptPinA,INPUT_PULLUP);
+  //  pinMode (interruptPinB,INPUT_PULLUP);
+  //  attachInterrupt(digitalPinToInterrupt(interruptPinA), isrA, CHANGE);
+  //  attachInterrupt(digitalPinToInterrupt(interruptPinB), isrB, CHANGE);
+
   //delay(500);
 }
 
@@ -87,17 +100,26 @@ void loop() {
 
   if (flag1 == HIGH) {
 
-    Serial.println(F("---> recieved events"));
+    // Serial.println(F("---> recieved events"));
     n = Wire.read();
     //buf[9] = Wire.read();
-    Serial.print(numBytes);
-    Serial.println(F("bytes recieved"));
-    Serial.print(F("recieved value : "));
+    //Serial.print(numBytes);
+    //Serial.println(F("bytes recieved"));
+    //Serial.print(F("recieved value : "));
     //    Serial.println(n);
-    // Serial.println("buf: " + buf);
-    Serial.println("n: " + n);
+    //    Serial.println("buf: " + buf[]);
+    //    Serial.println("n: " + n);
     msg = String(buf);
     Serial.println(msg);
+    if (msg.indexOf("GET") > 0) {
+      msg = "X150Y150";
+    }
+
+    if (msg.indexOf("Y500") > 0) {
+      msg = "X150Y150";
+      AUTO = true;
+    }
+
 
     int y_pos = msg.indexOf("Y");
     String y_value = msg.substring (y_pos + 1);
@@ -112,9 +134,6 @@ void loop() {
     flag1 = LOW;
   }
   // Makes sure we receive corrent values
-  if (n == 10) {
-    AUTO = true;
-  }
 
   if (AUTO == true) {
 
@@ -166,21 +185,21 @@ void loop() {
       Serial.println("PARAR");
       brake();
       delay(500);
-      }
-    
-     } 
-   if (timer.read() > 4 * t_search) {  
-      
+    }
+
+
+    if (timer.read() > 4 * t_search) {
+
       spin_right(velocidade_2);
       if ((SensorE > color_threshold) && (SensorD < color_threshold)) {
-      brake();
-      timer.start();
-      timer.stop();
-      AUTO = false;
-      
+        brake();
+        timer.start();
+        timer.stop();
+        AUTO = false;
+
+      }
     }
   }
-} 
 
   if (AUTO == false) {
 
@@ -365,7 +384,7 @@ void receiveEvents(int howMany) {
 }
 
 int straight(int speed) {
- digitalWrite(in1, LOW);
+  digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
@@ -395,3 +414,20 @@ int brake() {
   analogWrite(enB, 0); //O motor esquerdo fica ligado
   analogWrite(enA, 0);
 }
+
+
+//void isrA() {
+//  if (readB != readA) {
+//    count = count + 0.25;
+//  } else {
+//    count = count - 0.25;
+//  }
+//}
+//
+//void isrB() {
+//  if (readA == readB) {
+//    count = count + 0.25;
+//  } else {
+//    count = count - 0.25;
+//  }
+//}
