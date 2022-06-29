@@ -165,6 +165,7 @@ void loop() {
     if (timer.read() > 3 * t_search  && timer.read() < 4 * t_search) {
       Serial.println("PARAR");
       brake();
+      AUTO = false;
       // }
     }
   }
