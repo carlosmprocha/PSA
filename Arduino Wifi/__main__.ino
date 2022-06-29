@@ -1,3 +1,4 @@
+
 #include <Servo.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -7,9 +8,9 @@
 #define I2C_SLAVE1_ADDRESS 11
 #define PAYLOAD_SIZE 2
 
-#define Pino_Ponta 1 // Pino do Servo do Manipulador que está na ponta
-#define Pino_Meio 2 // Pino do Servo do Manipulador que está no meio
-#define Pino_Base 3 // Pino do Servo do Manipulador que está na base
+#define Pino_Ponta 11 // Pino do Servo do Manipulador que está na ponta
+#define Pino_Meio 10 // Pino do Servo do Manipulador que está no meio
+#define Pino_Base 9 // Pino do Servo do Manipulador que está na base
 #define Pino_Rele 4 // Pino do Eletroíman 
 
 int n = 0;
@@ -28,8 +29,8 @@ Servo Ponta;
 Servo Meio;
 Servo Base;
 
-int posvel = 100; // velocidade positiva
-int negvel = 80; // velocidade negativa
+int posvel = 110; // velocidade positiva
+int negvel = 70; // velocidade negativa
 int zerovel = 90; // velocidade nula
 
 
@@ -93,8 +94,8 @@ void setup() {
     while (true);
   }
 
-  // wait 10 seconds for connection:
-  delay(10000);
+  // wait 5 seconds for connection:
+  delay(5000);
 
   // start the web server on port 80
   server.begin();
@@ -175,35 +176,44 @@ void loop() {
         }
 
         ///////// PONTA //////////
+
+       // Serial.println(currentLine);
+        
         if (currentLine.endsWith("GET /CE")) {
           Ponta.write(posvel);
+          Serial.println("CE");
         }
-        elseif(currentLine.endsWith("GET /CD")) {
+        else if (currentLine.endsWith("GET /CD")) {
           Ponta.write(negvel);
+          Serial.println("CD");
         }
-        elseif(currentLine.endsWith("GET /CS")) {
+        else if (currentLine.endsWith("GET /CS")) {
           Ponta.write(zerovel);
+          Serial.println("CS");
         }
 
         ////////// MEIO /////////
         if (currentLine.endsWith("GET /ME")) {
           Meio.write(posvel);
+          Serial.println("ME");
         }
-        elseif (currentLine.endsWith("GET /MD")) {
+        else if (currentLine.endsWith("GET /MD")) {
           Meio.write(negvel);
+          Serial.println("MD");
         }
-        elseif (currentLine.endsWith("GET /MS")) {
+        else if (currentLine.endsWith("GET /MS")) {
           Meio.write(zerovel);
+          Serial.println("MS");
         }
 
         ////////// Base /////////
         if (currentLine.endsWith("GET /BE")) {
           Base.write(posvel);
         }
-        elseif (currentLine.endsWith("GET /BD")) {
+        else if (currentLine.endsWith("GET /BD")) {
           Base.write(negvel);
         }
-        elseif (currentLine.endsWith("GET /BS")) {
+        else if (currentLine.endsWith("GET /BS")) {
           Base.write(zerovel);
         }
 
@@ -211,263 +221,214 @@ void loop() {
         if (currentLine.endsWith("GET /IU")) {
           digitalWrite(Pino_Rele, 1);
         }
-        elseif(currentLine.endsWith("GET /IZ")) {
+        else if (currentLine.endsWith("GET /IZ")) {
           digitalWrite(Pino_Rele, 0);
         }
 
         // Check to see if the client request was "GET /H" or "GET /L":
-        if (currentLine.endsWith("GET /H")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
+        if (currentLine.endsWith("GET /AUTO")) {
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 1 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(1);
+          String  msg = "X500Y500";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(1);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
+        }
+
+        
+        if (currentLine.endsWith("GET /H")) {
+          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
+          n = Wire.read();
+          Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
+          String  msg = "X150Y0";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
+          Serial.print(F("sending value : "));
+          Serial.println(msg);
+          Wire.endTransmission();
+          Serial.print(" ");
+
+          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
+          n = Wire.read();
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
+          //go=3;
+          client.stop();
         }
 
         else if (currentLine.endsWith("GET /NE")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 2 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(2);
+          String  msg = "X3000Y0";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(2);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
         else if (currentLine.endsWith("GET /D")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 3 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(3);
+          String  msg = "X300Y150";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(3);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
         else if (currentLine.endsWith("GET /SE")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 4 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(4);
+          String  msg = "X300Y300";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(4);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
         else if (currentLine.endsWith("GET /L")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 5 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(5);
+          String  msg = "X150Y300";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(5);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
         else if (currentLine.endsWith("GET /SO")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 6 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(6);
+          String  msg = "X0Y300";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(6);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
         else if (currentLine.endsWith("GET /E")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 7 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(7);
+          String  msg = "X0Y150";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(7);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
         else if (currentLine.endsWith("GET /NO")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 8 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(8);
+          String  msg = "X0Y0";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(8);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
         else if (currentLine.endsWith("GET /P")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 9 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(9);
+          String  msg = "X150Y150";
+          char buffer[9];
+          msg.toCharArray(buffer, 9);
+          Wire.write(buffer, sizeof(buffer));
           Serial.print(F("sending value : "));
-          Serial.println(9);
+          Serial.println(msg);
           Wire.endTransmission();
           Serial.print(" ");
 
-          //Request value of n to slave after change
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
+          // Serial.print(F(" new recieved value : "));
+          // Serial.println(n);
           //go=3;
+          client.stop();
         }
-        else if (currentLine.endsWith("GET /AUTO")) {
-          //go = 1;
-          //while( go == 1){
-          //Request value of n to slave
-
-          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
-          n = Wire.read();
-          Serial.print(F("recieved value : "));
-          Serial.println(n);
-
-          //Send value 10 to slave
-          Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
-          Wire.write(10);
-          Serial.print(F("sending value : "));
-          Serial.println(9);
-          Wire.endTransmission();
-          Serial.print(" ");
-
-          //Request value of n to slave after change
-          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
-          n = Wire.read();
-          Serial.print(F(" new recieved value : "));
-          Serial.println(n);
-          //go=3;
-        }
-
         else if (currentLine.indexOf("HTTP/1.1") > 0 ) { // && currentLine.indexOf("H")==0
 
           // different member versions of find in the same order as above:
