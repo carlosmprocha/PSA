@@ -1,4 +1,4 @@
-#include<Servo.h>
+#include <Servo.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <WiFiNINA.h>
@@ -430,6 +430,31 @@ void loop() {
           //Send value 9 to slave
           Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
           Wire.write(9);
+          Serial.print(F("sending value : "));
+          Serial.println(9);
+          Wire.endTransmission();
+          Serial.print(" ");
+
+          //Request value of n to slave after change
+          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
+          n = Wire.read();
+          Serial.print(F(" new recieved value : "));
+          Serial.println(n);
+          //go=3;
+        }
+        else if (currentLine.endsWith("GET /AUTO")) {
+          //go = 1;
+          //while( go == 1){
+          //Request value of n to slave
+
+          Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
+          n = Wire.read();
+          Serial.print(F("recieved value : "));
+          Serial.println(n);
+
+          //Send value 10 to slave
+          Wire.beginTransmission(I2C_SLAVE1_ADDRESS);
+          Wire.write(10);
           Serial.print(F("sending value : "));
           Serial.println(9);
           Wire.endTransmission();
