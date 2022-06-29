@@ -124,7 +124,7 @@ void loop() {
     Serial.println(SensorE);
     Serial.println(SensorD);
     //Aqui está toda a lógica de comportamento do robô:
-    if ((SensorE < color_threshold ) && (SensorD < color_threshold)) { //Ambos os Sensores detetam cor branca, podem andar para a frente
+    if ((SensorE < color_threshold ) && (SensorD < color_threshold) && timer.read() < 4 * t_search) { //Ambos os Sensores detetam cor branca, podem andar para a frente
       timer.start();
       timer.stop();
       straight (velocidade_1);
@@ -133,14 +133,14 @@ void loop() {
       delay(100);
     }
 
-    else if ((SensorE < color_threshold ) && (SensorD > color_threshold)) { // Esquerdo branco e Direito preto
+    else if ((SensorE < color_threshold ) && (SensorD > color_threshold) && timer.read() < 4 * t_search) { // Esquerdo branco e Direito preto
       timer.start();
       timer.stop();
       spin_left(velocidade_1); // O motor direito fica ligado, fazendo assim o carrinho virar
       Serial.println("bp");
     }
 
-    else if ((SensorE > color_threshold) && (SensorD < color_threshold)) { // Esquerdo preto e Direito branco
+    else if ((SensorE > color_threshold) && (SensorD < color_threshold) && timer.read() < 4 * t_search) { // Esquerdo preto e Direito branco
       timer.start();
       timer.stop();
       spin_right(velocidade_1); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
@@ -165,11 +165,22 @@ void loop() {
     if (timer.read() > 3 * t_search  && timer.read() < 4 * t_search) {
       Serial.println("PARAR");
       brake();
+      delay(500);
+      }
+    
+     } 
+   if (timer.read() > 4 * t_search) {  
+      
+      spin_right(velocidade_2);
+      if ((SensorE > color_threshold) && (SensorD < color_threshold)) {
+      brake();
+      timer.start();
+      timer.stop();
       AUTO = false;
-      // }
+      
     }
   }
-
+} 
 
   if (AUTO == false) {
 
