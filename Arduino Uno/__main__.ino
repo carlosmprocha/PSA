@@ -1,6 +1,8 @@
-
+#include <NewPing.h>
+#include <Servo.h>
 #include "Timer.h"
 #include <Wire.h>
+
 # define I2C_SLAVE_ADDRESS 11
 
 //const byte interruptPinA = 2;
@@ -25,11 +27,39 @@
 
 #define pin_SE A0
 #define pin_SD A1
+
+#define pin_ST A2
+
+#define TRIG_PIN 4
+#define ECHO_PIN 7
+
+#define MAX_DISTANCE 300
+#define MIN_DISTANCE 15
+#define MIN_DISTANCE_INT 11
+#define MAX_DISTANCE_INT 25
+#define LONGE 50
+
+#define MIN_TURN 20
+#define MAX_TURN 145
+#define SERVO_CENTRO 60
+
+#define velocidade_1 = 150;
+#define velocidade_2 = 255;
+#define velocidade_c = 200;
+
+
+#define timeTurn 50
+#define timeStop 100
+#define timeReverse 10
+#define timeTrans 50
+
 int SensorE = 0;
 int SensorD = 0;
 
+bool flag = 0;
 bool flag1 = LOW;
 boolean flagButton = false;
+int check = 0;
 
 int n = 0;
 char buf[9] = "";
@@ -41,16 +71,18 @@ int xAxis = 150, yAxis = 150;
 int motorSpeedA = 0;
 int motorSpeedB = 0;
 
-int velocidade_1 = 150;
-int velocidade_2 = 255;
 
-bool AUTO = false;
+
+int MODO = 0;
 
 int color_threshold = 250;
 
 int t_search = 200;
 
 Timer timer;
+
+NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);
+Servo servo;
 
 void setup() {
 
@@ -61,6 +93,7 @@ void setup() {
   Wire.onRequest(requestEvents);
   Wire.onReceive(receiveEvents);
 
+  servo.attach(10);
 
   pinMode(enA, OUTPUT);
   pinMode(enB, OUTPUT);
@@ -71,6 +104,10 @@ void setup() {
 
   pinMode(pin_SE, INPUT);
   pinMode(pin_SD, INPUT);
+  pinMode(pin_ST, INPUT);
+
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
 
   //  //Serial.begin (9600);
   //  pinMode (interruptPinA,INPUT_PULLUP);
@@ -79,6 +116,9 @@ void setup() {
   //  attachInterrupt(digitalPinToInterrupt(interruptPinB), isrB, CHANGE);
 
   //delay(500);
+
+  servo.write(SERVO_CENTRO);
+
 }
 
 void loop() {
@@ -117,7 +157,7 @@ void loop() {
 
     if (msg.indexOf("Y500") > 0) {
       msg = "X150Y150";
-      AUTO = true;
+      MODO = 1;
     }
 
 
@@ -135,21 +175,24 @@ void loop() {
   }
   // Makes sure we receive corrent values
 
-  if (AUTO == true) {
+  SensorE = analogRead(pin_SE);
+  SensorD = analogRead(pin_SD);
+
+  if (MODO == 1) {
+
 
     //Neste processo armazenamos o valor lido pelo sensor na variável que armazena tais dados.
-    SensorE = analogRead(pin_SE);
-    SensorD = analogRead(pin_SD);
+
     Serial.println(SensorE);
     Serial.println(SensorD);
+
+
     //Aqui está toda a lógica de comportamento do robô:
     if ((SensorE < color_threshold ) && (SensorD < color_threshold) && timer.read() < 4 * t_search) { //Ambos os Sensores detetam cor branca, podem andar para a frente
       timer.start();
       timer.stop();
       straight (velocidade_1, velocidade_1);
       Serial.println("bb"); // informar que estão brancos os dois
-      Serial.println(timer.read());
-      delay(100);
     }
 
     else if ((SensorE < color_threshold ) && (SensorD > color_threshold) && timer.read() < 4 * t_search) { // Esquerdo branco e Direito preto
@@ -173,10 +216,7 @@ void loop() {
       Serial.println("VIRAR ESQUERDA");
     }
 
-    // else if ((SensorE > color_threshold) && (SensorD > color_threshold) && timer.read() != 0 ) {
 
-    Serial.println(timer.read());
-    //delay(100);
     if (timer.read() > t_search && timer.read() < 2 * t_search) {
       spin_right(velocidade_2); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
       Serial.println("VIRAR DIREITA");
@@ -195,13 +235,65 @@ void loop() {
         brake();
         timer.start();
         timer.stop();
-        AUTO = false;
+        MODO = 0;
 
       }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // ULTRASOM
+//
+//    distance = readPing();
+//    delay(50);
+//
+//    if (distance <= MIN_DISTANCE) {
+//
+//      timer.start();
+//      timer.stop();
+//      brake();
+//      MODO = 2;
+//      delay(timeStop);
+//      reverse(velocidade_1, velocidade_1);
+//      delay(timeReverse);
+//      brake();
+//      delay(timeStop);
+//
+//      int US = 1;
+//    }
+
+    // ULTRASOM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 
-  if (AUTO == false) {
+  if (MODO == 0) {
 
     //    if (n == 1) {
     //      Serial.println("ANDAR PARA FRENTE");
@@ -314,6 +406,178 @@ void loop() {
     //    analogWrite(enA, motorSpeedA); // Send PWM signal to motor A1
     //    analogWrite(enB, motorSpeedB); // Send PWM signal to motor B1
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // ULTRASOM
+//
+//
+//  if (MODO == 2) {
+//
+//    SensorT = analogRead(pin_ST);
+//
+//    if (US == 1) {
+//
+//      //     if (flag == 0) {
+//
+//      //spin_right(velocidade_c);
+//
+//      //CONTAR ENCODER VIRAR Á DIREITA
+//
+//      //brake();
+//
+//      //flag = 1;
+//      //   }
+//
+//
+//      if (SensorT <= MIN_DISTANCE_INT) {
+//        spin_right(velocidade_2);
+//        delay(timeTurn);
+//        brake();
+//        delay(timeTurn);
+//        straight(velocidade_1, velocidade_1);
+//      }
+//
+//      else if (LONGE >= SensorT && SensorT >= MAX_DISTANCE_INT) {
+//        spin_left(velocidade_2);
+//        delay(timeTurn);
+//        brake();
+//        delay(timeTurn);
+//        straight(velocidade_1, velocidade_1);
+//      }
+//
+//      else if (LONGE <= SensorT) {
+//        brake();
+//        US = 2;
+//        flag = 0;
+//      }
+//    }
+//
+//    else if (US == 2) {
+//
+//
+//      //     if (flag == 0) {
+//
+//      //spin_left(velocidade_c);
+//
+//      //CONTAR ENCODER VIRAR Á ESQUERDA
+//
+//      //brake();
+//
+//      //straight(velocidade_1, velocidade_1);
+//      //delay(timTrans);
+//      //flag = 1;
+//      // }
+//
+//
+//
+//      if (SensorT <= MIN_DISTANCE_INT) {
+//        spin_right(velocidade_2);
+//        delay(timeTurn);
+//        brake();
+//        delay(timeTurn);
+//        straight(velocidade_1, velocidade_1);
+//      }
+//
+//      else if (LONGE >= SensorT && SensorT >= MAX_DISTANCE_INT) {
+//        spin_left(velocidade_2);
+//        delay(timeTurn);
+//        brake();
+//        delay(timeTurn);
+//        straight(velocidade_1, velocidade_1);
+//      }
+//
+//      else if (LONGE <= SensorT) {
+//        brake();
+//        US = 3;
+//        flag = 0;
+//      }
+//    }
+//
+//    else if (US == 3) {
+//
+//
+//
+//      //     if (flag == 0) {
+//
+//      //spin_left(velocidade_c);
+//
+//      //CONTAR ENCODER VIRAR Á ESQUERDA
+//
+//      //brake();
+//
+//      //straight(velocidade_1, velocidade_1);
+//      //flag = 1;
+//      // }
+//
+//
+//
+//      if ((SensorE < color_threshold) || (SensorD < color_threshold) &&  check == 0) {
+//        delay(50);
+//        brake();
+//        delay(50);
+//        spin_right(velocidade_2);
+//        check = 1;
+//      }
+//
+//      if (check == 1) {
+//
+//        if ((SensorE > color_threshold) && (SensorD < color_threshold)) {
+//          brake();
+//          timer.start();
+//          timer.stop();
+//          MODO = 1;
+//
+//        }
+//
+//
+//      }
+//    }
+//  }
+
+
+  // ULTRASOM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 //void forword() {
@@ -375,8 +639,17 @@ void receiveEvents(int howMany) {
     buf[i] = Wire.read();
   }
   flag1 = HIGH;
-
 }
+
+int readPing() {
+  delay(70);
+  int cm = sonar.ping_cm();
+  if (cm == 0) {
+    cm = 250;
+  }
+  return cm;
+}
+
 
 int straight(int speedA, int speedB) {
   digitalWrite(in1, LOW);
@@ -418,6 +691,8 @@ int brake() {
   analogWrite(enB, 0); //O motor esquerdo fica ligado
   analogWrite(enA, 0);
 }
+
+
 
 
 //void isrA() {
