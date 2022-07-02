@@ -42,7 +42,7 @@ int motorSpeedA = 0;
 int motorSpeedB = 0;
 
 int velocidade_1 = 150;
-int velocidade_2 = 200;
+int velocidade_2 = 255;
 
 bool AUTO = false;
 
@@ -146,7 +146,7 @@ void loop() {
     if ((SensorE < color_threshold ) && (SensorD < color_threshold) && timer.read() < 4 * t_search) { //Ambos os Sensores detetam cor branca, podem andar para a frente
       timer.start();
       timer.stop();
-      straight (velocidade_1);
+      straight (velocidade_1, velocidade_1);
       Serial.println("bb"); // informar que estão brancos os dois
       Serial.println(timer.read());
       delay(100);
@@ -155,14 +155,14 @@ void loop() {
     else if ((SensorE < color_threshold ) && (SensorD > color_threshold) && timer.read() < 4 * t_search) { // Esquerdo branco e Direito preto
       timer.start();
       timer.stop();
-      spin_left(velocidade_1); // O motor direito fica ligado, fazendo assim o carrinho virar
+      spin_left(velocidade_2); // O motor direito fica ligado, fazendo assim o carrinho virar
       Serial.println("bp");
     }
 
     else if ((SensorE > color_threshold) && (SensorD < color_threshold) && timer.read() < 4 * t_search) { // Esquerdo preto e Direito branco
       timer.start();
       timer.stop();
-      spin_right(velocidade_1); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
+      spin_right(velocidade_2); // O motor direito desliga, fazendo assim o carrinho virar no outro sentido
       Serial.println("pb");
     }
 
@@ -203,71 +203,72 @@ void loop() {
 
   if (AUTO == false) {
 
-    if (n == 1) {
-      Serial.println("ANDAR PARA FRENTE");
-      xAxis = 150;
-      yAxis = 0;
-    }
-    if (n == 5) {
-      Serial.println("ANDAR PARA TRAS");
-      xAxis = 150;
-      yAxis = 300;
-    }
-    if (n == 9) {
-      Serial.println("PARAR");
-      xAxis = 150;
-      yAxis = 150;
-    }
-    if (n == 3) {
-      Serial.println("RODAR PARA DIREITA");
-      xAxis = 300;
-      yAxis = 150;
-    }
-    if (n == 7) {
-      Serial.println("RODAR PARA ESQUERDA");
-      xAxis = 0;
-      yAxis = 150;
-    }
-    if (n == 2) {
-      Serial.println("ANDAR PARA NE");
-      xAxis = 300;
-      yAxis = 0;
-    }
-
-    if (n == 4) {
-      Serial.println("ANDAR PARA SE");
-      xAxis = 300;
-      yAxis = 300;
-    }
-    if (n == 8) {
-      Serial.println("ANDAR PARA NO");
-      xAxis = 0;
-      yAxis = 0;
-    }
-    if (n == 6) {
-      Serial.println("ANDAR PARA SO");
-      xAxis = 0;
-      yAxis = 300;
-    }
+    //    if (n == 1) {
+    //      Serial.println("ANDAR PARA FRENTE");
+    //      xAxis = 150;
+    //      yAxis = 0;
+    //    }
+    //    if (n == 5) {
+    //      Serial.println("ANDAR PARA TRAS");
+    //      xAxis = 150;
+    //      yAxis = 300;
+    //    }
+    //    if (n == 9) {
+    //      Serial.println("PARAR");
+    //      xAxis = 150;
+    //      yAxis = 150;
+    //    }
+    //    if (n == 3) {
+    //      Serial.println("RODAR PARA DIREITA");
+    //      xAxis = 300;
+    //      yAxis = 150;
+    //    }
+    //    if (n == 7) {
+    //      Serial.println("RODAR PARA ESQUERDA");
+    //      xAxis = 0;
+    //      yAxis = 150;
+    //    }
+    //    if (n == 2) {
+    //      Serial.println("ANDAR PARA NE");
+    //      xAxis = 300;
+    //      yAxis = 0;
+    //    }
+    //
+    //    if (n == 4) {
+    //      Serial.println("ANDAR PARA SE");
+    //      xAxis = 300;
+    //      yAxis = 300;
+    //    }
+    //    if (n == 8) {
+    //      Serial.println("ANDAR PARA NO");
+    //      xAxis = 0;
+    //      yAxis = 0;
+    //    }
+    //    if (n == 6) {
+    //      Serial.println("ANDAR PARA SO");
+    //      xAxis = 0;
+    //      yAxis = 300;
+    //    }
 
     if (xAxis > 130 && xAxis < 170 && yAxis > 130 && yAxis < 170) {
-      Stop();
+      brake();
     }
 
     if (yAxis > 130 && yAxis < 170) {
 
-
       // 130 - 115 | 60 - ?
       if (xAxis < 130) {
-        turnLeft();
+
         motorSpeedA = map(xAxis, 130, 0, 100, 255);
         motorSpeedB = map(xAxis, 130, 0, 100, 255);
+        spin_left(motorSpeedA);
       }
 
       if (xAxis > 170) {
-        turnRight();
+
         motorSpeedA = map(xAxis, 170, 300, 100, 255);
         motorSpeedB = map(xAxis, 170, 300, 100, 255);
+        spin_right(motorSpeedA);
       }
 
     } else {
@@ -275,30 +276,17 @@ void loop() {
       if (xAxis > 130 && xAxis < 170) {
 
         if (yAxis < 130) {
-          forword();
-        }
-        if (yAxis > 170) {
-          backword();
-        }
-
-        if (yAxis < 130) {
           motorSpeedA = map(yAxis, 130, 0, 50, 255);
           motorSpeedB = map(yAxis, 130, 0, 50, 255);
+          straight(motorSpeedA, motorSpeedB);
         }
-
         if (yAxis > 170) {
           motorSpeedA = map(yAxis, 170, 300, 50, 255);
           motorSpeedB = map(yAxis, 170, 300, 50, 255);
+          reverse(motorSpeedA, motorSpeedB);
         }
 
       } else {
-
-        if (yAxis < 130) {
-          forword();
-        }
-        if (yAxis > 170) {
-          backword();
-        }
 
         if (xAxis < 130) {
           motorSpeedA = map(xAxis, 130, 0, 200, 100);
@@ -309,6 +297,13 @@ void loop() {
           motorSpeedA = 255;
           motorSpeedB = map(xAxis, 170, 300, 200, 100);
         }
+
+        if (yAxis < 130) {
+          straight(motorSpeedA, motorSpeedB);
+        }
+        if (yAxis > 170) {
+          reverse(motorSpeedA, motorSpeedB);
+        }
       }
     }
 
@@ -316,54 +311,54 @@ void loop() {
     //Serial.print(",");
     //Serial.println(motorSpeedA);
 
-    analogWrite(enA, motorSpeedA); // Send PWM signal to motor A1
-    analogWrite(enB, motorSpeedB); // Send PWM signal to motor B1
+    //    analogWrite(enA, motorSpeedA); // Send PWM signal to motor A1
+    //    analogWrite(enB, motorSpeedB); // Send PWM signal to motor B1
   }
 }
 
-void forword() {
-  Serial.println("forword");
-  Serial.println("A: " + motorSpeedA);
-  Serial.println("B: " + motorSpeedB);
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-}
-
-void backword() {
-  Serial.println("backword");
-  Serial.println("A: " + motorSpeedA);
-  Serial.println("B: " + motorSpeedB);
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-}
-
-void turnRight() {
-  Serial.println("turnRight");
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-}
-
-void turnLeft() {
-  Serial.println("turnLeft");
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-}
-
-void Stop() {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
-  Serial.println("stop");
-}
+//void forword() {
+//  Serial.println("forword");
+//  Serial.println("A: " + motorSpeedA);
+//  Serial.println("B: " + motorSpeedB);
+//  digitalWrite(in1, LOW);
+//  digitalWrite(in2, HIGH);
+//  digitalWrite(in3, LOW);
+//  digitalWrite(in4, HIGH);
+//}
+//
+//void backword() {
+//  Serial.println("backword");
+//  Serial.println("A: " + motorSpeedA);
+//  Serial.println("B: " + motorSpeedB);
+//  digitalWrite(in1, HIGH);
+//  digitalWrite(in2, LOW);
+//  digitalWrite(in3, HIGH);
+//  digitalWrite(in4, LOW);
+//}
+//
+//void turnRight() {
+//  Serial.println("turnRight");
+//  digitalWrite(in1, HIGH);
+//  digitalWrite(in2, LOW);
+//  digitalWrite(in3, LOW);
+//  digitalWrite(in4, HIGH);
+//}
+//
+//void turnLeft() {
+//  Serial.println("turnLeft");
+//  digitalWrite(in1, LOW);
+//  digitalWrite(in2, HIGH);
+//  digitalWrite(in3, HIGH);
+//  digitalWrite(in4, LOW);
+//}
+//
+//void Stop() {
+//  digitalWrite(in1, LOW);
+//  digitalWrite(in2, LOW);
+//  digitalWrite(in3, LOW);
+//  digitalWrite(in4, LOW);
+//  Serial.println("stop");
+//}
 
 void requestEvents() {
 
@@ -383,13 +378,22 @@ void receiveEvents(int howMany) {
 
 }
 
-int straight(int speed) {
+int straight(int speedA, int speedB) {
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  analogWrite(enB, speed); // Ambos motores ligam na mesma velocidade
-  analogWrite(enA, speed);
+  analogWrite(enB, speedB); // Ambos motores ligam na mesma velocidade
+  analogWrite(enA, speedA);
+}
+
+int reverse(int speedA, int speedB) {
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  analogWrite(enB, speedB); // Ambos motores ligam na mesma velocidade
+  analogWrite(enA, speedA);
 }
 
 int spin_right (int speed) {
