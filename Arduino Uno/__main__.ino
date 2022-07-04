@@ -37,7 +37,7 @@
 #define MIN_DISTANCE 15
 #define MIN_DISTANCE_INT 440
 #define MAX_DISTANCE_INT 470
-#define LONGE 490
+#define LONGE 495
 
 #define MIN_TURN 20
 #define MAX_TURN 145
