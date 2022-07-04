@@ -181,29 +181,29 @@ void loop() {
         
         if (currentLine.endsWith("GET /CE")) {
           Ponta.write(posvel);
-          Serial.println("CE");
+         // Serial.println("CE");
         }
         else if (currentLine.endsWith("GET /CD")) {
           Ponta.write(negvel);
-          Serial.println("CD");
+          //Serial.println("CD");
         }
         else if (currentLine.endsWith("GET /CS")) {
           Ponta.write(zerovel);
-          Serial.println("CS");
+          //Serial.println("CS");
         }
 
         ////////// MEIO /////////
         if (currentLine.endsWith("GET /ME")) {
           Meio.write(posvel);
-          Serial.println("ME");
+          //Serial.println("ME");
         }
         else if (currentLine.endsWith("GET /MD")) {
           Meio.write(negvel);
-          Serial.println("MD");
+          //Serial.println("MD");
         }
         else if (currentLine.endsWith("GET /MS")) {
           Meio.write(zerovel);
-          Serial.println("MS");
+          //Serial.println("MS");
         }
 
         ////////// Base /////////
@@ -234,10 +234,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+         //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -256,10 +256,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -277,10 +277,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          ///Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -297,10 +297,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -317,10 +317,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -337,10 +337,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -357,10 +357,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -377,10 +377,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -397,10 +397,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -417,10 +417,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+         // Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
@@ -440,9 +440,9 @@ void loop() {
 
           String x_value = currentLine.substring (x_pos + 1, y_pos);
 
-          Serial.println("Recebido: " + currentLine);
-          Serial.println("A mandar X: " + x_value);
-          Serial.println("A mandar Y: " + y_value);
+          //Serial.println("Recebido: " + currentLine);
+          //Serial.println("A mandar X: " + x_value);
+          //Serial.println("A mandar Y: " + y_value);
 
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
@@ -452,10 +452,10 @@ void loop() {
           char buffer[9];
           msg.toCharArray(buffer, 9);
           Wire.write(buffer, sizeof(buffer));
-          Serial.print(F("sending value : "));
-          Serial.println(msg);
+          //Serial.print(F("sending value : "));
+          //Serial.println(msg);
           Wire.endTransmission();
-          Serial.print(" ");
+          //Serial.print(" ");
 
           Wire.requestFrom(I2C_SLAVE1_ADDRESS, 1);
           n = Wire.read();
