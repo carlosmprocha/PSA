@@ -5,15 +5,8 @@
 
 # define I2C_SLAVE_ADDRESS 11
 
-//const byte interruptPinA = 2;
-//const byte interruptPinB = 3;
-//double count = 1;
-//long protectedCount = 0;
-//long previousCount = 0;
+double count = 0;
 //#define readA bitRead (PIND,2) //fastest than digitalRead()
-//#define readB bitRead (PIND,3) //fastest than digitalRead()
-
-//SoftwareSerial BT(2, 3); // RX, TX  NECESSÁRIO?
 
 //LEFT
 #define enB 6
@@ -28,38 +21,45 @@
 #define pin_SE A0
 #define pin_SD A1
 
-#define pin_ST A2
+#define pin_ST A3
 
 #define TRIG_PIN 4
 #define ECHO_PIN 7
 
 #define MAX_DISTANCE 300
-#define MIN_DISTANCE 15
-#define MIN_DISTANCE_INT 440
-#define MAX_DISTANCE_INT 470
-#define LONGE 495
+#define MIN_DISTANCE 10
+#define MIN_DISTANCE_INT 350
+#define MAX_DISTANCE_INT 450
+#define LONGE 30
+#define PERTO 5
+
 
 #define MIN_TURN 20
 #define MAX_TURN 145
-#define SERVO_CENTRO 60
+#define SERVO_CENTRO 40
+#define SERVO_LADO 135
 
-#define velocidade_1 = 150;
-#define velocidade_2 = 255;
-#define velocidade_c = 200;
+#define velocidade_1 100
+#define velocidade_2 240
+#define velocidade_c  200
 
 
-#define timeTurn 50
+#define timeTurn 100
 #define timeStop 100
 #define timeReverse 10
 #define timeTrans 50
 
 int SensorE = 0;
 int SensorD = 0;
+int distance = 150;
+int SensorT = 0;
+int flagcount = 0;
 
 bool flag = 0;
 bool flag1 = LOW;
 boolean flagButton = false;
-int check = 0;
+int chek = 0;
+int US = 0;
 
 int n = 0;
 char buf[9] = "";
@@ -75,7 +75,7 @@ int motorSpeedB = 0;
 
 int MODO = 0;
 
-int color_threshold = 250;
+int color_threshold = 275;
 
 int t_search = 200;
 
@@ -253,24 +253,25 @@ void loop() {
 
 
     // ULTRASOM
-//
-//    distance = readPing();
-//    delay(50);
-//
-//    if (distance <= MIN_DISTANCE) {
-//
-//      timer.start();
-//      timer.stop();
-//      brake();
-//      MODO = 2;
-//      delay(timeStop);
-//      reverse(velocidade_1, velocidade_1);
-//      delay(timeReverse);
-//      brake();
-//      delay(timeStop);
-//
-//      int US = 1;
-//    }
+    //
+    distance = readPing();
+    delay(50);
+    Serial.println("DISTANCIA");
+    Serial.println(distance);
+    if (distance <= MIN_DISTANCE) {
+
+      timer.start();
+      timer.stop();
+      brake();
+      MODO = 2;
+      delay(timeStop);
+      reverse(velocidade_1, velocidade_1);
+      delay(timeReverse);
+      brake();
+      delay(timeStop);
+
+      US = 1;
+    }
 
     // ULTRASOM
 
@@ -429,131 +430,224 @@ void loop() {
 
 
   // ULTRASOM
-//
-//
-//  if (MODO == 2) {
-//
-//    SensorT = analogRead(pin_ST);
-//
-//    if (US == 1) {
-//
-//      //     if (flag == 0) {
-//
-//      //spin_right(velocidade_c);
-//
-//      //CONTAR ENCODER VIRAR Á DIREITA
-//
-//      //brake();
-//
-//      //flag = 1;
-//      //   }
-//
-//
-//      if (SensorT <= MIN_DISTANCE_INT) {
-//        spin_right(velocidade_2);
-//        delay(timeTurn);
-//        brake();
-//        delay(timeTurn);
-//        straight(velocidade_1, velocidade_1);
-//      }
-//
-//      else if (LONGE >= SensorT && SensorT >= MAX_DISTANCE_INT) {
-//        spin_left(velocidade_2);
-//        delay(timeTurn);
-//        brake();
-//        delay(timeTurn);
-//        straight(velocidade_1, velocidade_1);
-//      }
-//
-//      else if (LONGE <= SensorT) {
-//        brake();
-//        US = 2;
-//        flag = 0;
-//      }
-//    }
-//
-//    else if (US == 2) {
-//
-//
-//      //     if (flag == 0) {
-//
-//      //spin_left(velocidade_c);
-//
-//      //CONTAR ENCODER VIRAR Á ESQUERDA
-//
-//      //brake();
-//
-//      //straight(velocidade_1, velocidade_1);
-//      //delay(timTrans);
-//      //flag = 1;
-//      // }
-//
-//
-//
-//      if (SensorT <= MIN_DISTANCE_INT) {
-//        spin_right(velocidade_2);
-//        delay(timeTurn);
-//        brake();
-//        delay(timeTurn);
-//        straight(velocidade_1, velocidade_1);
-//      }
-//
-//      else if (LONGE >= SensorT && SensorT >= MAX_DISTANCE_INT) {
-//        spin_left(velocidade_2);
-//        delay(timeTurn);
-//        brake();
-//        delay(timeTurn);
-//        straight(velocidade_1, velocidade_1);
-//      }
-//
-//      else if (LONGE <= SensorT) {
-//        brake();
-//        US = 3;
-//        flag = 0;
-//      }
-//    }
-//
-//    else if (US == 3) {
-//
-//
-//
-//      //     if (flag == 0) {
-//
-//      //spin_left(velocidade_c);
-//
-//      //CONTAR ENCODER VIRAR Á ESQUERDA
-//
-//      //brake();
-//
-//      //straight(velocidade_1, velocidade_1);
-//      //flag = 1;
-//      // }
-//
-//
-//
-//      if ((SensorE < color_threshold) || (SensorD < color_threshold) &&  check == 0) {
-//        delay(50);
-//        brake();
-//        delay(50);
-//        spin_right(velocidade_2);
-//        check = 1;
-//      }
-//
-//      if (check == 1) {
-//
-//        if ((SensorE > color_threshold) && (SensorD < color_threshold)) {
-//          brake();
-//          timer.start();
-//          timer.stop();
-//          MODO = 1;
-//
-//        }
-//
-//
-//      }
-//    }
-//  }
 
+
+  if (MODO == 2) {
+
+    SensorT = analogRead(pin_ST);
+    Serial.println(SensorT);
+
+    if (US == 1) {
+
+      //   Serial.println("MODO1");
+
+      if (flag == 0) {
+        //      Serial.println("teste");
+        spin_right(velocidade_2);
+        //        if (SensorT <= MIN_DISTANCE_INT) {
+        //          brake();
+        //
+        //          flag = 1;
+        //        }
+
+        // contar(8);
+        delay(1000);
+        brake();
+        flag = 1;
+
+      }
+
+      servo.write(SERVO_LADO);
+      delay(100);
+
+      distance = readPing();
+      delay(50);
+      Serial.println("DISTANCIA");
+      Serial.println(distance);
+
+      straight(velocidade_1, velocidade_1);
+      if ((distance <= PERTO) && (flag == 1)) {
+
+
+        spin_right(velocidade_2);
+        delay(100);
+        straight(velocidade_1, velocidade_1);
+
+
+      }
+      if ((distance >= LONGE) && (flag == 1)) {
+
+        delay(1000);
+        brake();
+        US = 2;
+        flag = 0;
+
+      }
+
+      //      if ((SensorT <= MIN_DISTANCE_INT) && (flag == 1)) {
+      //        spin_right(velocidade_2);
+      //        delay(timeTurn);
+      //        //        brake();
+      //        //        delay(timeTurn);
+      //        straight(velocidade_1, velocidade_1);
+      //        delay(timeTurn);
+      //      }
+      //
+      //      else if ((LONGE >= SensorT && SensorT >= MAX_DISTANCE_INT) && (flag == 1)) {
+      //        spin_left(velocidade_2);
+      //        delay(timeTurn);
+      //        //     brake();
+      //        //     delay(timeTurn);
+      //        straight(velocidade_1, velocidade_1);
+      //        delay(timeTurn);
+      //      }
+      //
+      //      else if ((LONGE <= SensorT) && (flag == 1)) {
+      //        brake();
+      //        US = 2;
+      //        flag = 0;
+      //      }
+
+
+
+
+    }
+
+    else if (US == 2) {
+
+      Serial.println("MODO2");
+      if (flag == 0) {
+
+        spin_left(velocidade_2);
+        //        if (SensorT <= MIN_DISTANCE_INT) {
+        //
+        //
+        //          brake();
+        //
+        //          straight(velocidade_1, velocidade_1);
+        //          delay(timeTrans);
+        //          flag = 1;
+        //        }
+
+        //contar(12);
+        delay(1000);
+        brake();
+        delay(100);
+        straight(velocidade_1, velocidade_1);
+        delay(1000);
+        flag = 1;
+      }
+
+      distance = readPing();
+      delay(50);
+      //   Serial.println("DISTANCIA");
+      Serial.println(distance);
+
+      straight(velocidade_1, velocidade_1);
+
+      if ((distance <= PERTO) && (flag == 1)) {
+
+
+        spin_right(velocidade_2);
+        delay(100);
+        straight(velocidade_1, velocidade_1);
+
+
+      }
+      if ((distance >= LONGE) && (flag == 1)) {
+
+        delay(300);
+        brake();
+        US = 3;
+        flag = 0;
+
+      }
+
+      //      if ((SensorT <= MIN_DISTANCE_INT) && (flag == 1)) {
+      //        spin_right(velocidade_2);
+      //        delay(timeTurn);
+      //        //     brake();
+      //        //     delay(timeTurn);
+      //        straight(velocidade_1, velocidade_1);
+      //        delay(timeTurn);
+      //      }
+      //
+      //      else if ((LONGE >= SensorT && SensorT >= MAX_DISTANCE_INT) && (flag == 1)) {
+      //        spin_left(velocidade_2);
+      //        delay(timeTurn);
+      //        //    brake();
+      //        //    delay(timeTurn);
+      //        straight(velocidade_1, velocidade_1);
+      //        delay(timeTurn);
+      //      }
+      //
+      //      else if ((LONGE <= SensorT) && (flag == 1)) {
+      //        brake();
+      //        US = 3;
+      //        flag = 0;
+      //      }
+    }
+
+    else if (US == 3) {
+
+      Serial.println("MODO3");
+
+      if (flag == 0) {
+
+
+        spin_left(velocidade_2);
+        //        if (SensorT <= MIN_DISTANCE_INT) {
+        //
+        //
+        //          brake();
+        //
+        //          straight(velocidade_1, velocidade_1);
+        //          delay(timeTrans);
+        //          flag = 1;
+        //        }
+
+
+        // contar(12);
+        delay(500);
+        brake();
+        delay(100);
+
+        flag = 1;
+      }
+      straight(90, 90);
+
+      SensorE = analogRead(pin_SE);
+      SensorD = analogRead(pin_SD);
+      Serial.println(SensorE);
+      Serial.println(SensorD);
+
+
+      if (((SensorE < color_threshold) || (SensorD < color_threshold)) &&  (chek == 0) && (flag == 1)) {
+        delay(100);
+        brake();
+        delay(50);
+        spin_right(velocidade_2);
+        chek = 1;
+      }
+
+      if (chek == 1) {
+
+        if ((SensorE > color_threshold) || (SensorD > color_threshold) && (flag == 1)) {
+          delay(50);
+          brake();
+          MODO = 1;
+          US=0;
+          chek = 0;
+          servo.write(SERVO_CENTRO);
+          delay(100);
+          timer.start();
+          timer.stop();
+        }
+
+
+      }
+    }
+  }
 
   // ULTRASOM
 
@@ -646,7 +740,9 @@ int readPing() {
   int cm = sonar.ping_cm();
   if (cm == 0) {
     cm = 250;
+
   }
+  Serial.println(cm);
   return cm;
 }
 
@@ -656,17 +752,19 @@ int straight(int speedA, int speedB) {
   digitalWrite(in2, HIGH);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  analogWrite(enB, speedB); // Ambos motores ligam na mesma velocidade
-  analogWrite(enA, speedA);
+  analogWrite(enA, speedB); // Ambos motores ligam na mesma velocidade
+  analogWrite(enB, speedA);
+  //  Serial.println("Frente");
 }
 
 int reverse(int speedA, int speedB) {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-  analogWrite(enB, speedB); // Ambos motores ligam na mesma velocidade
-  analogWrite(enA, speedA);
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+  analogWrite(enA, speedB); // Ambos motores ligam na mesma velocidade
+  analogWrite(enB, speedA);
+  // Serial.println("Trás");
 }
 
 int spin_right (int speed) {
@@ -676,6 +774,7 @@ int spin_right (int speed) {
   digitalWrite(in4, HIGH);
   analogWrite(enB, speed); //O motor esquerdo fica ligado
   analogWrite(enA, speed);
+  // Serial.println("Direita");
 }
 
 int spin_left (int speed) {
@@ -685,28 +784,34 @@ int spin_left (int speed) {
   digitalWrite(in4, LOW);
   analogWrite(enB, speed); //O motor esquerdo fica ligado
   analogWrite(enA, speed);
+  // Serial.println("Esquerda");
 }
 
 int brake() {
   analogWrite(enB, 0); //O motor esquerdo fica ligado
   analogWrite(enA, 0);
+  //Serial.println("Para");
 }
 
 
 
+void contar(int m) {
+  count = 0;
+  while (count <= m) {
+    int   readA = bitRead (PIND, 2); //fastest than digitalRead()
+    Serial.println(readA);
+    Serial.println(" ");
+    delay(100);
+    if ((readA == 1) && (flagcount == 0)) {
+      flagcount = 1;
+      count = count + 1;
+      Serial.println(count);
 
-//void isrA() {
-//  if (readB != readA) {
-//    count = count + 0.25;
-//  } else {
-//    count = count - 0.25;
-//  }
-//}
-//
-//void isrB() {
-//  if (readA == readB) {
-//    count = count + 0.25;
-//  } else {
-//    count = count - 0.25;
-//  }
-//}
+    }
+    if ((readA == 0) && (flagcount == 1)) {
+      flagcount = 0;
+
+    }
+  }
+
+}
